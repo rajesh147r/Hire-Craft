@@ -5,8 +5,9 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  fullName: text("full_name").notNull(),
+  fullName: text("full_name"),
   email: text("email").notNull().unique(),
+  password: text("password"), // For email/password auth
   phone: text("phone"),
   location: text("location"),
   linkedin: text("linkedin"),
@@ -14,7 +15,14 @@ export const users = pgTable("users", {
   website: text("website"),
   summary: text("summary"),
   skills: json("skills").$type<string[]>().default(sql`'[]'::json`),
+  // OAuth provider info
+  googleId: text("google_id"),
+  facebookId: text("facebook_id"),
+  provider: text("provider").default("email"), // email, google, facebook
+  profileImageUrl: text("profile_image_url"),
+  emailVerified: boolean("email_verified").default(false),
   createdAt: text("created_at").default(sql`now()`),
+  updatedAt: text("updated_at").default(sql`now()`),
 });
 
 export const education = pgTable("education", {

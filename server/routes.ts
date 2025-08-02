@@ -2,6 +2,15 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
+  generateToken, 
+  hashPassword, 
+  comparePassword, 
+  verifyGoogleToken, 
+  requireAuth, 
+  optionalAuth,
+  type AuthRequest 
+} from "./auth";
+import { 
   insertUserSchema, 
   insertEducationSchema, 
   insertExperienceSchema, 
@@ -12,6 +21,144 @@ import { analyzeJobRequirements, optimizeResumeForJob } from "./services/openai"
 import { searchProjectsBySkills, getUserGitHubStats } from "./services/github";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Authentication routes
+  app.post('/api/auth/signup', async (req, res) => {
+    try {
+      const { fullName, email, password } = req.body;
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User already exists with this email" });
+      }
+      
+      // Hash password and create user
+      const hashedPassword = await hashPassword(password);
+      const user = await storage.createUser({
+        fullName,
+        email,
+        password: hashedPassword,
+        provider: "email",
+        emailVerified: false,
+      });
+      
+      // Generate token
+      const token = generateToken(user.id);
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      
+      res.json({ 
+        token, 
+        user: userWithoutPassword,
+        message: "Account created successfully" 
+      });
+    } catch (error) {
+      console.error("Signup error:", error);
+      res.status(500).json({ message: "Failed to create account" });
+    }
+  });
+
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
+      if (!user || !user.password) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+      
+      // Check password
+      const isValidPassword = await comparePassword(password, user.password);
+      if (!isValidPassword) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+      
+      // Generate token
+      const token = generateToken(user.id);
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      
+      res.json({ 
+        token, 
+        user: userWithoutPassword,
+        message: "Logged in successfully" 
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Failed to log in" });
+    }
+  });
+
+  app.post('/api/auth/google', async (req, res) => {
+    try {
+      const { credential } = req.body;
+      
+      // Verify Google token
+      const googleUser = await verifyGoogleToken(credential);
+      
+      // Check if user exists
+      let user = await storage.getUserByEmail(googleUser.email);
+      
+      if (user) {
+        // Update Google ID if not set
+        if (!user.googleId) {
+          user = await storage.updateUser(user.id, {
+            googleId: googleUser.googleId,
+            profileImageUrl: googleUser.profileImageUrl,
+          });
+        }
+      } else {
+        // Create new user
+        user = await storage.createUser({
+          fullName: googleUser.fullName,
+          email: googleUser.email,
+          googleId: googleUser.googleId,
+          provider: "google",
+          profileImageUrl: googleUser.profileImageUrl,
+          emailVerified: googleUser.emailVerified,
+        });
+      }
+      
+      // Generate token
+      const token = generateToken(user.id);
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      
+      res.json({ 
+        token, 
+        user: userWithoutPassword,
+        message: "Logged in with Google successfully" 
+      });
+    } catch (error) {
+      console.error("Google auth error:", error);
+      res.status(400).json({ message: "Google authentication failed" });
+    }
+  });
+
+  app.get('/api/auth/me', requireAuth, async (req: AuthRequest, res) => {
+    try {
+      const user = await storage.getUser(req.userId!);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Get user error:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  app.post('/api/auth/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: "Logged out successfully" });
+  });
   
   // User routes
   app.get("/api/users/:id", async (req, res) => {

@@ -25,19 +25,16 @@ import TemplateGallery from "@/components/template-gallery";
 import ATSScore from "@/components/ats-score";
 import PDFGenerator from "@/components/pdf-generator";
 import { type User } from "@shared/schema";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState<'profile' | 'experience' | 'education' | 'projects' | 'analysis' | 'templates'>('profile');
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   
-  // For demo purposes, using a hardcoded user ID
-  // In a real app, this would come from authentication
-  const userId = "demo-user-1";
+  const { user, logout } = useAuth();
+  const userId = user?.id;
 
-  const { data: user, isLoading: userLoading } = useQuery<User>({
-    queryKey: ['/api/users', userId],
-    enabled: false, // Start with profile creation
-  });
+  // Remove duplicate user query since we get user from auth hook
 
   const { data: templates } = useQuery({
     queryKey: ['/api/templates'],
@@ -94,8 +91,28 @@ export default function Dashboard() {
               </button>
             </nav>
             <div className="flex items-center space-x-4">
-              <PDFGenerator userId={userId} />
-              <div className="w-8 h-8 bg-slate-300 rounded-full"></div>
+              {userId && <PDFGenerator userId={userId} />}
+              <div className="flex items-center space-x-2">
+                {user?.profileImageUrl ? (
+                  <img 
+                    src={user.profileImageUrl} 
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-8 h-8 bg-slate-300 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-medium text-slate-600">
+                      {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                    </span>
+                  </div>
+                )}
+                <button
+                  onClick={logout}
+                  className="text-sm text-slate-600 hover:text-red-600 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
