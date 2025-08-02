@@ -1,0 +1,641 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeAI - Smart ATS Resume Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans">
+    <!-- @COMPONENT: Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-file-alt text-primary text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold text-slate-900">ResumeAI</h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="text-slate-600 hover:text-primary transition-colors">Dashboard</a>
+                    <a href="#" class="text-slate-600 hover:text-primary transition-colors">Templates</a>
+                    <a href="#" class="text-slate-600 hover:text-primary transition-colors">AI Analysis</a>
+                    <a href="#" class="text-slate-600 hover:text-primary transition-colors">Settings</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-download mr-2"></i>Download Resume
+                    </button>
+                    <div class="w-8 h-8 bg-slate-300 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- @COMPONENT: MainContent -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Welcome Section -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Welcome back, <span data-bind="user.name">John Doe</span></h2>
+                            <p class="text-slate-600 mt-1">Build your perfect ATS-optimized resume</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-slate-500">Profile Completion</div>
+                            <div class="flex items-center mt-1">
+                                <div class="w-32 bg-slate-200 rounded-full h-2 mr-3">
+                                    <div class="bg-secondary h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-slate-700">75%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button data-event="click:openProfileForm" class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-primary hover:bg-blue-50 transition-all">
+                            <i class="fas fa-user-edit text-primary text-xl mr-3"></i>
+                            <div class="text-left">
+                                <div class="font-medium text-slate-900">Update Profile</div>
+                                <div class="text-sm text-slate-500">Personal & contact info</div>
+                            </div>
+                        </button>
+                        
+                        <button data-event="click:openJobAnalysis" class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-primary hover:bg-blue-50 transition-all">
+                            <i class="fas fa-robot text-primary text-xl mr-3"></i>
+                            <div class="text-left">
+                                <div class="font-medium text-slate-900">AI Analysis</div>
+                                <div class="text-sm text-slate-500">Job matching & skills</div>
+                            </div>
+                        </button>
+                        
+                        <button data-event="click:openTemplates" class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-primary hover:bg-blue-50 transition-all">
+                            <i class="fas fa-file-alt text-primary text-xl mr-3"></i>
+                            <div class="text-left">
+                                <div class="font-medium text-slate-900">Templates</div>
+                                <div class="text-sm text-slate-500">8 ATS-friendly designs</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Information Form -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div class="p-6 border-b border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-900 flex items-center">
+                            <i class="fas fa-user-circle text-primary mr-3"></i>
+                            Profile Information
+                        </h3>
+                        <p class="text-slate-600 mt-1">Complete your profile to get better resume recommendations</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Personal Information -->
+                            <div class="space-y-4">
+                                <h4 class="font-medium text-slate-900">Personal Details</h4>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Full Name *</label>
+                                    <input type="text" data-bind="user.fullName" placeholder="John Doe" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Email Address *</label>
+                                    <input type="email" data-bind="user.email" placeholder="john.doe@example.com" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Phone Number *</label>
+                                    <input type="tel" data-bind="user.phone" placeholder="+1 (555) 123-4567" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Location</label>
+                                    <input type="text" data-bind="user.location" placeholder="San Francisco, CA" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                </div>
+                            </div>
+                            
+                            <!-- Professional Links -->
+                            <div class="space-y-4">
+                                <h4 class="font-medium text-slate-900">Professional Links</h4>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">LinkedIn Profile</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fab fa-linkedin text-slate-400"></i>
+                                        </div>
+                                        <input type="url" data-bind="user.linkedin" placeholder="linkedin.com/in/johndoe" class="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">GitHub Profile</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fab fa-github text-slate-400"></i>
+                                        </div>
+                                        <input type="url" data-bind="user.github" placeholder="github.com/johndoe" class="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Portfolio Website</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-globe text-slate-400"></i>
+                                        </div>
+                                        <input type="url" data-bind="user.website" placeholder="johndoe.dev" class="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Professional Summary</label>
+                                    <textarea data-bind="user.summary" placeholder="Brief professional summary..." rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none" data-mock="true"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skills Section -->
+                        <div class="mt-8">
+                            <h4 class="font-medium text-slate-900 mb-4">Technical Skills</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Add Skills</label>
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        <!-- @MAP: skills.map(skill => ( -->
+                                        <span data-mock="true" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                            JavaScript
+                                            <button class="ml-2 text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-times text-xs"></i>
+                                            </button>
+                                        </span>
+                                        <span data-mock="true" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                            React
+                                            <button class="ml-2 text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-times text-xs"></i>
+                                            </button>
+                                        </span>
+                                        <span data-mock="true" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                            Node.js
+                                            <button class="ml-2 text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-times text-xs"></i>
+                                            </button>
+                                        </span>
+                                        <span data-mock="true" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                            Python
+                                            <button class="ml-2 text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-times text-xs"></i>
+                                            </button>
+                                        </span>
+                                        <!-- @END_MAP )) -->
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <input type="text" placeholder="Type a skill and press Enter" class="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                        <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 flex justify-end">
+                            <button data-event="click:saveProfile" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Save Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Analysis Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div class="p-6 border-b border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-900 flex items-center">
+                            <i class="fas fa-robot text-primary mr-3"></i>
+                            AI-Powered Job Analysis
+                        </h3>
+                        <p class="text-slate-600 mt-1">Paste job requirements to get personalized resume optimization</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Job Title</label>
+                                <input type="text" data-bind="jobAnalysis.title" placeholder="e.g., Senior Frontend Developer" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Job Requirements</label>
+                                <textarea data-bind="jobAnalysis.requirements" placeholder="Paste the job description or requirements here..." rows="6" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none" data-mock="true"></textarea>
+                            </div>
+                            
+                            <button data-event="click:analyzeJob" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                                <i class="fas fa-magic mr-2"></i>
+                                Analyze Job & Optimize Resume
+                            </button>
+                        </div>
+                        
+                        <!-- Analysis Results -->
+                        <div class="mt-8 p-4 bg-slate-50 rounded-lg border border-slate-200" data-mock="true">
+                            <h4 class="font-medium text-slate-900 mb-4">Analysis Results</h4>
+                            
+                            <!-- Match Score -->
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-slate-700">Job Match Score</span>
+                                    <span class="text-sm font-bold text-secondary">78%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-secondary h-2 rounded-full" style="width: 78%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Missing Skills -->
+                            <div class="mb-6">
+                                <h5 class="font-medium text-slate-900 mb-3">Skills to Acquire</h5>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">GraphQL</span>
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">TypeScript</span>
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Docker</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Recommended Projects -->
+                            <div>
+                                <h5 class="font-medium text-slate-900 mb-3">Learning Resources</h5>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200">
+                                        <div class="flex items-center">
+                                            <i class="fab fa-github text-slate-400 mr-3"></i>
+                                            <div>
+                                                <div class="font-medium text-slate-900">TypeScript Todo App</div>
+                                                <div class="text-sm text-slate-500">Learn TypeScript with a practical project</div>
+                                            </div>
+                                        </div>
+                                        <button class="text-primary hover:text-blue-700">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200">
+                                        <div class="flex items-center">
+                                            <i class="fab fa-github text-slate-400 mr-3"></i>
+                                            <div>
+                                                <div class="font-medium text-slate-900">GraphQL API Server</div>
+                                                <div class="text-sm text-slate-500">Build a complete GraphQL backend</div>
+                                            </div>
+                                        </div>
+                                        <button class="text-primary hover:text-blue-700">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- @END_COMPONENT: MainContent -->
+
+            <!-- @COMPONENT: Sidebar -->
+            <div class="space-y-6">
+                
+                <!-- Resume Templates -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div class="p-6 border-b border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-900 flex items-center">
+                            <i class="fas fa-file-alt text-primary mr-3"></i>
+                            Resume Templates
+                        </h3>
+                        <p class="text-slate-600 mt-1">8 ATS-friendly designs</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- @MAP: templates.map(template => ( -->
+                            <div class="border border-slate-200 rounded-lg p-3 hover:border-primary cursor-pointer transition-colors" data-mock="true">
+                                <div class="bg-slate-100 h-24 rounded mb-2 flex items-center justify-center">
+                                    <i class="fas fa-file-alt text-slate-400 text-2xl"></i>
+                                </div>
+                                <div class="text-xs font-medium text-slate-900">Modern</div>
+                                <div class="text-xs text-slate-500">Clean & Professional</div>
+                            </div>
+                            
+                            <div class="border border-primary bg-blue-50 rounded-lg p-3 cursor-pointer" data-mock="true">
+                                <div class="bg-blue-100 h-24 rounded mb-2 flex items-center justify-center">
+                                    <i class="fas fa-file-alt text-primary text-2xl"></i>
+                                </div>
+                                <div class="text-xs font-medium text-slate-900">Classic</div>
+                                <div class="text-xs text-slate-500">Traditional Layout</div>
+                            </div>
+                            
+                            <div class="border border-slate-200 rounded-lg p-3 hover:border-primary cursor-pointer transition-colors" data-mock="true">
+                                <div class="bg-slate-100 h-24 rounded mb-2 flex items-center justify-center">
+                                    <i class="fas fa-file-alt text-slate-400 text-2xl"></i>
+                                </div>
+                                <div class="text-xs font-medium text-slate-900">Creative</div>
+                                <div class="text-xs text-slate-500">Design-focused</div>
+                            </div>
+                            
+                            <div class="border border-slate-200 rounded-lg p-3 hover:border-primary cursor-pointer transition-colors" data-mock="true">
+                                <div class="bg-slate-100 h-24 rounded mb-2 flex items-center justify-center">
+                                    <i class="fas fa-file-alt text-slate-400 text-2xl"></i>
+                                </div>
+                                <div class="text-xs font-medium text-slate-900">Minimal</div>
+                                <div class="text-xs text-slate-500">Simple & Clean</div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                        
+                        <button data-event="click:viewAllTemplates" class="w-full mt-4 text-primary border border-primary py-2 rounded-lg hover:bg-blue-50 transition-colors">
+                            View All Templates
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ATS Score Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4 flex items-center">
+                            <i class="fas fa-search text-primary mr-3"></i>
+                            ATS Optimization
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">Keyword Match</span>
+                                <span class="text-sm font-medium text-secondary">85%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">Format Score</span>
+                                <span class="text-sm font-medium text-secondary">92%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">Readability</span>
+                                <span class="text-sm font-medium text-accent">78%</span>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-slate-200">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium text-slate-900">Overall ATS Score</span>
+                                    <span class="text-lg font-bold text-secondary">85%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-secondary h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button data-event="click:improveATS" class="w-full mt-4 bg-secondary text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Improve ATS Score
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div class="p-6 border-b border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-900">Recent Activity</h3>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <!-- @MAP: activities.map(activity => ( -->
+                            <div class="flex items-start space-x-3" data-mock="true">
+                                <div class="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-slate-900">Downloaded Modern template</div>
+                                    <div class="text-xs text-slate-500">2 hours ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-3" data-mock="true">
+                                <div class="w-2 h-2 bg-secondary rounded-full mt-2"></div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-slate-900">Updated skills section</div>
+                                    <div class="text-xs text-slate-500">1 day ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-3" data-mock="true">
+                                <div class="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-slate-900">Analyzed job requirements</div>
+                                    <div class="text-xs text-slate-500">3 days ago</div>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- @END_COMPONENT: Sidebar -->
+        </div>
+    </div>
+
+    <!-- @COMPONENT: Modal - Template Gallery -->
+    <div id="templateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-slate-900">Choose Your Resume Template</h3>
+                    <button class="text-slate-400 hover:text-slate-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- @MAP: allTemplates.map(template => ( -->
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Modern Professional</div>
+                                <div class="text-sm text-slate-500 mb-3">Clean two-column layout</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Classic Traditional</div>
+                                <div class="text-sm text-slate-500 mb-3">Time-tested single column</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Creative Designer</div>
+                                <div class="text-sm text-slate-500 mb-3">Perfect for creative roles</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Minimal Clean</div>
+                                <div class="text-sm text-slate-500 mb-3">Simple and focused</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Executive Level</div>
+                                <div class="text-sm text-slate-500 mb-3">For senior positions</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Tech Focus</div>
+                                <div class="text-sm text-slate-500 mb-3">Optimized for developers</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">Academic</div>
+                                <div class="text-sm text-slate-500 mb-3">For research & education</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-slate-200 rounded-lg p-4 hover:border-primary hover:shadow-md cursor-pointer transition-all" data-mock="true">
+                            <div class="bg-slate-100 h-40 rounded mb-3 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-slate-400 text-4xl"></i>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-medium text-slate-900 mb-1">International</div>
+                                <div class="text-sm text-slate-500 mb-3">Global standard format</div>
+                                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Use Template
+                                </button>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Modal -->
+
+    <script>
+        (function() {
+            // TODO: Implement business logic, API calls, and state management
+            // TODO: Add form validation and error handling
+            // TODO: Integrate with OpenAI API for job analysis
+            // TODO: Connect to GitHub API for repository suggestions
+            // TODO: Implement PDF generation and download functionality
+            // TODO: Add real-time ATS score calculation
+            
+            // Modal functionality
+            const templateModal = document.getElementById('templateModal');
+            
+            // Event listeners for UI interactions
+            document.addEventListener('click', function(e) {
+                // Open template modal
+                if (e.target.closest('[data-event="click:openTemplates"]') || 
+                    e.target.closest('[data-event="click:viewAllTemplates"]')) {
+                    templateModal.classList.remove('hidden');
+                }
+                
+                // Close modal
+                if (e.target.closest('.fa-times') && templateModal) {
+                    templateModal.classList.add('hidden');
+                }
+                
+                // Close modal on backdrop click
+                if (e.target === templateModal) {
+                    templateModal.classList.add('hidden');
+                }
+            });
+            
+            // Escape key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !templateModal.classList.contains('hidden')) {
+                    templateModal.classList.add('hidden');
+                }
+            });
+            
+            // Placeholder for other interactions
+            document.querySelectorAll('[data-event]').forEach(element => {
+                const event = element.getAttribute('data-event');
+                if (event.startsWith('click:')) {
+                    element.addEventListener('click', function() {
+                        const action = event.replace('click:', '');
+                        console.log(`Action triggered: ${action}`);
+                        // TODO: Implement specific action handlers
+                    });
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
